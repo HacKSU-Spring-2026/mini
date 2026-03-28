@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brain Games</title>
+  <link rel="stylesheet" href="/shared.css" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 56px;
+      padding: 40px 24px;
+    }
+
+    header { text-align: center; }
+
+    header h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: var(--muted);
+    }
+
+    #games {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 18px;
+      width: 100%;
+      max-width: 820px;
+    }
+
+    .game-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 36px 24px 28px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--card-a), var(--card-b));
+      opacity: 0;
+      transition: opacity 0.18s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px);
+      border-color: #ffffff18;
+      box-shadow: 0 16px 40px #0008;
+    }
+
+    .game-card:hover::before { opacity: 1; }
+
+    .game-card .icon {
+      font-size: 2.6rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 12px var(--card-a));
+    }
+
+    .game-card .name {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .game-card .desc {
+      font-size: 0.83rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .game-card .tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--card-a)33, var(--card-b)33);
+      color: var(--card-a);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Brain Games</h1>
+    <p>Test your mind — pick a challenge</p>
+  </header>
+
+  <div id="games">
+    <a class="game-card" href="/reaction/" style="--card-a:#00e676;--card-b:#00c9ff">
+      <div class="icon">⚡</div>
+      <div class="name">Reaction Test</div>
+      <div class="desc">Click the moment the screen turns green. How fast are your reflexes?</div>
+      <div class="tag">Reflexes</div>
+    </a>
+
+    <a class="game-card" href="/typing" style="--card-a:#7c6aff;--card-b:#00c9ff">
+      <div class="icon">⌨️</div>
+      <div class="name">Typing Speed</div>
+      <div class="desc">Race through a paragraph. Words per minute, tracked live.</div>
+      <div class="tag">Speed</div>
+    </a>
+
+    <a class="game-card" href="/states" style="--card-a:#ff9f43;--card-b:#ff4d6d">
+      <div class="icon">🗺️</div>
+      <div class="name">Name the States</div>
+      <div class="desc">How many of the 50 US states can you recall from memory?</div>
+      <div class="tag">Memory</div>
+    </a>
+  </div>
+</body>
+</html>

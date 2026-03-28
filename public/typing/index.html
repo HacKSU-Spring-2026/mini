@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing Speed</title>
+  <link rel="stylesheet" href="/shared.css" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 72px 24px 40px;
+    }
+
+    #container {
+      width: 100%;
+      max-width: 740px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    #paragraph-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 32px;
+      font-size: 1.2rem;
+      line-height: 2;
+      letter-spacing: 0.02em;
+    }
+
+    .word { display: inline; }
+    .char { display: inline; transition: color 0.05s; }
+    .char.correct { color: var(--green); }
+    .char.wrong   { color: var(--red); text-decoration: underline; }
+    .char.cursor  { border-left: 2px solid var(--accent); margin-left: -1px; }
+
+    #input {
+      width: 100%;
+      padding: 16px 20px;
+      font-family: inherit;
+      font-size: 1.05rem;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      resize: none;
+    }
+
+    #input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px #7c6aff22;
+    }
+
+    #input:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    #restart { display: none; align-self: center; }
+    #restart.visible { display: block; }
+
+    #done-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #done-screen.visible { display: flex; }
+
+    #done-stats { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  </style>
+</head>
+<body>
+  <nav>
+    <span class="logo">BG</span>
+    <a href="/">Home</a>
+    <span class="sep">›</span>
+    <span class="current">Typing Speed</span>
+  </nav>
+
+  <div id="container">
+    <div id="stats">
+      <div class="stat-card">
+        <div class="label">WPM</div>
+        <div class="value" id="wpm">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Accuracy</div>
+        <div class="value" id="accuracy">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Time</div>
+        <div class="value" id="timer">--</div>
+      </div>
+    </div>
+
+    <div id="paragraph-box" aria-live="polite"></div>
+
+    <textarea id="input" rows="2" placeholder="Start typing to begin..." spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+
+    <div id="done-screen">
+      <div class="done-screen hero-stat" style="background:var(--surface)">
+        <div class="label">Words per minute</div>
+        <div class="value" id="final-wpm">--</div>
+        <div class="unit">wpm</div>
+      </div>
+      <div id="done-stats">
+        <div class="stat-card">
+          <div class="label">Accuracy</div>
+          <div class="value" id="final-accuracy">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Time</div>
+          <div class="value" id="final-time">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Errors</div>
+          <div class="value" id="final-errors">--</div>
+        </div>
+      </div>
+      <button id="restart" class="btn-primary visible">Play Again</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

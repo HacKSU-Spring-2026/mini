@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Name the 50 States</title>
+  <link rel="stylesheet" href="/shared.css" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 72px 24px 40px;
+    }
+
+    #container {
+      width: 100%;
+      max-width: 780px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #top-bar {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    #input-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    #state-input {
+      flex: 1;
+      padding: 14px 18px;
+      font-family: inherit;
+      font-size: 1.05rem;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #state-input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px #ff9f4322;
+    }
+
+    #state-input.correct-flash {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px #00e67622;
+    }
+
+    #state-input:disabled { opacity: 0.35; }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+
+    .state-slot {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 6px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: transparent; /* hidden until found */
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      font-weight: 600;
+    }
+
+    .state-slot.found {
+      background: #001a0d;
+      border-color: #00e67640;
+      color: var(--green);
+    }
+
+    .state-slot.revealed {
+      background: #1a0008;
+      border-color: #ff4d6d40;
+      color: var(--red);
+    }
+
+    #done-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
+
+    #done-screen.visible { display: flex; }
+
+    .hero-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 72px;
+      text-align: center;
+    }
+
+    .hero-stat .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+    .hero-stat .value {
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-top: 8px;
+      background: linear-gradient(135deg, var(--orange), var(--red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-stat .unit { font-size: 1rem; color: var(--muted); margin-top: 4px; }
+
+    #done-sub { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  </style>
+</head>
+<body>
+  <nav>
+    <span class="logo">BG</span>
+    <a href="/">Home</a>
+    <span class="sep">›</span>
+    <span class="current">Name the 50 States</span>
+  </nav>
+
+  <div id="container">
+    <div id="top-bar">
+      <div class="stat-card">
+        <div class="label">Found</div>
+        <div class="value" id="found-count">0 / 50</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Time</div>
+        <div class="value" id="timer">0s</div>
+      </div>
+    </div>
+
+    <div id="input-row">
+      <input id="state-input" type="text" placeholder="Type a state name..." autocomplete="off" spellcheck="false" />
+      <button id="give-up" class="btn-ghost">Give Up</button>
+    </div>
+
+    <div id="grid"></div>
+
+    <div id="done-screen">
+      <div class="hero-stat">
+        <div class="label">States named</div>
+        <div class="value" id="final-count">--</div>
+        <div class="unit">out of 50</div>
+      </div>
+      <div id="done-sub">
+        <div class="stat-card">
+          <div class="label">Time</div>
+          <div class="value" id="final-time">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Missed</div>
+          <div class="value" id="final-missed">--</div>
+        </div>
+      </div>
+      <button id="play-again" class="btn-primary">Play Again</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

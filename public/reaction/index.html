@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reaction Test</title>
+  <link rel="stylesheet" href="/shared.css" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 52px;
+      gap: 0;
+    }
+
+    #game-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding: 40px 24px;
+      width: 100%;
+    }
+
+    #game-area {
+      width: 100%;
+      max-width: 680px;
+      height: 360px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.18s, box-shadow 0.18s;
+      background: var(--surface);
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #game-area::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, #ffffff08 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    #game-area.waiting  { background: #2a0a0a; border-color: var(--red);    box-shadow: 0 0 60px #ff4d6d30; }
+    #game-area.ready    { background: #0a2a14; border-color: var(--green);  box-shadow: 0 0 60px #00e67630; }
+    #game-area.too-soon { background: #2a1a00; border-color: var(--orange); box-shadow: 0 0 60px #ff9f4330; }
+    #game-area.hidden   { display: none; }
+
+    #message {
+      font-size: 2.2rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 0 28px;
+      letter-spacing: -0.5px;
+    }
+
+    #game-area.waiting  #message { color: var(--red); }
+    #game-area.ready    #message { color: var(--green); }
+    #game-area.too-soon #message { color: var(--orange); }
+
+    #sub-message { font-size: 0.95rem; color: var(--muted); }
+
+    #round-dots { display: flex; gap: 10px; }
+    #round-dots.hidden { display: none; }
+
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .dot.done   { background: var(--green); border-color: var(--green); }
+    .dot.active { background: var(--text);  border-color: var(--text); }
+
+    #results {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #results.done {
+      flex-direction: column;
+      align-items: center;
+      margin-top: 0;
+    }
+
+    #results.done .stat-card { width: 300px; padding: 24px 32px; }
+    #results.done .stat-card .label { font-size: 0.8rem; }
+    #results.done .stat-card .value { font-size: 3.2rem; }
+
+    #play-again { display: none; }
+    #play-again.visible { display: block; }
+  </style>
+</head>
+<body>
+  <nav>
+    <span class="logo">BG</span>
+    <a href="/">Home</a>
+    <span class="sep">›</span>
+    <span class="current">Reaction Test</span>
+  </nav>
+
+  <div id="game-wrap">
+    <div id="game-area" role="button" aria-label="Reaction test area" tabindex="0">
+      <div id="message">Click to start</div>
+      <div id="sub-message"></div>
+    </div>
+
+    <div id="round-dots"></div>
+
+    <div id="results">
+      <div class="stat-card">
+        <div class="label">Last</div>
+        <div class="value" id="last">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Best</div>
+        <div class="value" id="best">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Average</div>
+        <div class="value" id="avg">--</div>
+      </div>
+    </div>
+
+    <button id="play-again" class="btn-primary">Play Again</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
