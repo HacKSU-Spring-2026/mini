@@ -23,6 +23,9 @@ app.get('/wordle', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/wordle/index.html'));
 });
 
+app.get('/crabs', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/crabs/index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`); // log the URL once the server is ready
