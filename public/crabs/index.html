@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crab Whack</title>
+  <link rel="stylesheet" href="/shared.css" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 72px 24px 40px;
+      gap: 28px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .hole {
+      width: 130px;
+      height: 130px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .hole:hover { border-color: #ffffff18; }
+
+    .crab {
+      position: absolute;
+      font-size: 4rem;
+      line-height: 1;
+      bottom: -100%;
+      transition: bottom 0.12s ease-out;
+      pointer-events: none;
+    }
+
+    .hole.active .crab  { bottom: 8px; }
+    .hole.golden .crab  { filter: drop-shadow(0 0 10px gold); }
+
+    .hole.whacked .crab {
+      bottom: -100%;
+      transition: bottom 0.08s ease-in;
+    }
+
+    .pop-score {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--green);
+      pointer-events: none;
+      animation: floatUp 0.6s ease-out forwards;
+    }
+
+    .pop-score.gold { color: gold; }
+
+    @keyframes floatUp {
+      0%   { opacity: 1; top: 30%; }
+      100% { opacity: 0; top: 0%; }
+    }
+
+    #start-screen, #done-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+    }
+
+    #start-screen h2, #done-screen h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    #start-screen p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 340px;
+      line-height: 1.7;
+    }
+
+    .hero-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-stat::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #ff9f4318, #ff4d6d10);
+      pointer-events: none;
+    }
+
+    .hero-stat .label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+
+    .hero-stat .value {
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-top: 8px;
+      background: linear-gradient(135deg, var(--orange), var(--red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .done-sub-stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #progress-bar-wrap {
+      width: 420px;
+      max-width: 100%;
+      height: 6px;
+      background: var(--surface);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    #progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange), var(--red));
+      border-radius: 99px;
+      transition: width 0.2s linear;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <span class="logo">BG</span>
+    <a href="/">Home</a>
+    <span class="sep">›</span>
+    <span class="current">Crab Whack</span>
+  </nav>
+
+  <!-- Start screen -->
+  <div id="start-screen">
+    <div style="font-size:4rem">🦀</div>
+    <h2>Crab Whack</h2>
+    <p>Crabs pop out of their holes — click them before they hide! Golden crabs are worth 3 points. You have 30 seconds.</p>
+    <button class="btn-primary" id="start-btn">Start Game</button>
+  </div>
+
+  <!-- Game screen -->
+  <div id="game-screen" style="display:none; flex-direction:column; align-items:center; gap:28px;">
+    <div id="stats">
+      <div class="stat-card">
+        <div class="label">Score</div>
+        <div class="value" id="score">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Missed</div>
+        <div class="value" id="missed">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Time</div>
+        <div class="value" id="timer">30</div>
+      </div>
+    </div>
+
+    <div id="progress-bar-wrap">
+      <div id="progress-bar"></div>
+    </div>
+
+    <div id="grid"></div>
+  </div>
+
+  <!-- Done screen -->
+  <div id="done-screen" style="display:none">
+    <div class="hero-stat">
+      <div class="label">Final Score</div>
+      <div class="value" id="final-score">0</div>
+    </div>
+    <div class="done-sub-stats">
+      <div class="stat-card">
+        <div class="label">Hits</div>
+        <div class="value" id="final-hits">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Missed</div>
+        <div class="value" id="final-missed">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Accuracy</div>
+        <div class="value" id="final-accuracy">0%</div>
+      </div>
+    </div>
+    <button class="btn-primary" id="restart-btn">Play Again</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
