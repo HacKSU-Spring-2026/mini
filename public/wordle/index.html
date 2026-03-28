@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wordle</title>
+  <link rel="stylesheet" href="/shared.css" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 52px;
+      gap: 0;
+    }
+
+    #game-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding: 40px 24px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    #game-board {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      width: 100%;
+      max-width: 350px;
+      aspect-ratio: 5/6;
+    }
+
+    .tile {
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: var(--surface);
+      color: var(--text);
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .tile.filled { border-color: var(--text); }
+    .tile.correct { background: var(--green); border-color: var(--green); color: #fff; }
+    .tile.present { background: #ff9f43; border-color: #ff9f43; color: #fff; }
+    .tile.absent { background: var(--muted); border-color: var(--muted); color: #fff; }
+
+    #keyboard {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .keyboard-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .key {
+      flex: 1;
+      max-width: 43px;
+      height: 58px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+
+    .key:hover { background: var(--surface2); }
+    .key.correct { background: var(--green); border-color: var(--green); color: #fff; }
+    .key.present { background: #ff9f43; border-color: #ff9f43; color: #fff; }
+    .key.absent { background: var(--muted); border-color: var(--muted); color: #fff; }
+
+    .key.wide {
+      flex: 1.5;
+      max-width: 65px;
+    }
+
+    #message {
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      min-height: 2rem;
+    }
+
+    #stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #play-again { display: none; }
+    #play-again.visible { display: block; }
+  </style>
+</head>
+<body>
+  <nav>
+    <span class="logo">BG</span>
+    <a href="/">Home</a>
+    <span class="sep">›</span>
+    <span class="current">Wordle</span>
+  </nav>
+
+  <div id="game-wrap">
+    <div id="game-board"></div>
+    <div id="message"></div>
+    <div id="keyboard"></div>
+    <div id="stats">
+      <div class="stat-card">
+        <div class="label">Games</div>
+        <div class="value" id="games">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Wins</div>
+        <div class="value" id="wins">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Streak</div>
+        <div class="value" id="streak">0</div>
+      </div>
+    </div>
+    <button id="play-again" class="btn-primary">Play Again</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
