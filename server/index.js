@@ -19,6 +19,11 @@ app.get('/states', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/states/index.html'));
 });
 
+app.get('/wordle', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/wordle/index.html'));
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`); // log the URL once the server is ready
 });
