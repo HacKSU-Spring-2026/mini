@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,7 +16,9 @@
       padding: 40px 24px;
     }
 
-    header { text-align: center; }
+    header {
+      text-align: center;
+    }
 
     header h1 {
       font-size: 3.2rem;
@@ -60,7 +63,9 @@
     .game-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 3px;
       background: linear-gradient(90deg, var(--card-a), var(--card-b));
       opacity: 0;
@@ -73,7 +78,9 @@
       box-shadow: 0 16px 40px #0008;
     }
 
-    .game-card:hover::before { opacity: 1; }
+    .game-card:hover::before {
+      opacity: 1;
+    }
 
     .game-card .icon {
       font-size: 2.6rem;
@@ -106,6 +113,7 @@
     }
   </style>
 </head>
+
 <body>
   <header>
     <h1>Brain Games</h1>
@@ -133,6 +141,14 @@
       <div class="desc">How many of the 50 US states can you recall from memory?</div>
       <div class="tag">Memory</div>
     </a>
+
+    <a class="game-card" href="/wordle" style="--card-a:#ff9f43;--card-b:#00e676">
+      <div class="icon">📝</div>
+      <div class="name">Wordle</div>
+      <div class="desc">Guess the 5-letter word in 6 tries. Green for right spot, yellow for right letter.</div>
+      <div class="tag">Logic</div>
+    </a>
   </div>
 </body>
+
 </html>
