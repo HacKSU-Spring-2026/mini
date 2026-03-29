@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brain Games</title>
+  <title>Cave Games</title>
   <link rel="stylesheet" href="/shared.css" />
   <style>
     body {
@@ -14,20 +14,50 @@
       justify-content: center;
       gap: 56px;
       padding: 40px 24px;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at top, rgba(71, 98, 44, 0.55), transparent 28%),
+                  linear-gradient(180deg, #0a270f 0%, #08140a 75%, #041007 100%);
+    }
+
+    #ptero {
+      position: absolute;
+      bottom: 20px;
+      right: 100px;
+      width: 280px;
+      max-width: 45vw;
+      pointer-events: none;
+      opacity: 0.92;
+      transform: translateZ(0);
     }
 
     header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
       text-align: center;
+      margin-top: 52px;
+    }
+
+    header img {
+      width: 220px;
+      height: auto;
+      border-radius: 18px;
+      box-shadow: none;
     }
 
     header h1 {
       font-size: 3.2rem;
       font-weight: 800;
       letter-spacing: -1.5px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      background: linear-gradient(135deg, #d7aa5c, #7f5d2e);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      margin: 0;
     }
 
     header p {
@@ -45,9 +75,9 @@
     }
 
     .game-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(36, 58, 32, 0.95), rgba(18, 33, 18, 0.97));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
       padding: 36px 24px 28px;
       text-decoration: none;
       color: var(--text);
@@ -55,9 +85,10 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
-      transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+      transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s, background 0.18s;
       position: relative;
       overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03), 0 18px 40px rgba(0,0,0,0.22);
     }
 
     .game-card::before {
@@ -85,7 +116,7 @@
     .game-card .icon {
       font-size: 2.6rem;
       line-height: 1;
-      filter: drop-shadow(0 0 12px var(--card-a));
+      filter: drop-shadow(0 0 16px rgba(255, 213, 150, 0.32));
     }
 
     .game-card .name {
@@ -107,8 +138,8 @@
       text-transform: uppercase;
       padding: 3px 10px;
       border-radius: 20px;
-      background: linear-gradient(135deg, var(--card-a)33, var(--card-b)33);
-      color: var(--card-a);
+      background: rgba(163, 113, 56, 0.16);
+      color: #d7b076;
       margin-top: 4px;
     }
   </style>
@@ -116,46 +147,50 @@
 
 <body>
   <header>
-    <h1>Brain Games</h1>
-    <p>Test your mind — pick a challenge</p>
+    <img src="/Adobe Express - file.png" alt="Adobe Express icon" />
+    <div>
+      <h1>Cave Games</h1>
+      <p>hypothetical situations to be in with a caveman friend</p>
+    </div>
   </header>
 
   <div id="games">
     <a class="game-card" href="/reaction/" style="--card-a:#00e676;--card-b:#00c9ff">
-      <div class="icon">⚡</div>
+      <div class="icon">🏹</div>
       <div class="name">Reaction Test</div>
-      <div class="desc">Click the moment the screen turns green. How fast are your reflexes?</div>
+      <div class="desc">Reaction test. Dodge the caveman's attacks!</div>
       <div class="tag">Reflexes</div>
     </a>
 
     <a class="game-card" href="/typing" style="--card-a:#7c6aff;--card-b:#00c9ff">
       <div class="icon">⌨️</div>
-      <div class="name">Typing Speed</div>
-      <div class="desc">Race through a paragraph. Words per minute, tracked live.</div>
+      <div class="name">Typosaurus</div>
+      <div class="desc">Type through a paragraph. He's picking it up fast!</div>
       <div class="tag">Speed</div>
     </a>
 
     <a class="game-card" href="/states" style="--card-a:#ff9f43;--card-b:#ff4d6d">
       <div class="icon">🗺️</div>
       <div class="name">Name the States</div>
-      <div class="desc">How many of the 50 US states can you recall from memory?</div>
+      <div class="desc">Name the states... I guess....</div>
       <div class="tag">Memory</div>
     </a>
 
     <a class="game-card" href="/wordle" style="--card-a:#ff9f43;--card-b:#00e676">
       <div class="icon">📝</div>
       <div class="name">Wordle</div>
-      <div class="desc">Guess the 5-letter word in 6 tries. Green for right spot, yellow for right letter.</div>
+      <div class="desc">Only with the words the caveman knows.</div>
       <div class="tag">Logic</div>
     </a>
 
         <a class="game-card" href="/crabs" style="--card-a:#ff6b35;--card-b:#ff4d6d">
       <div class="icon">🦀</div>
-      <div class="name">Crab Whack</div>
-      <div class="desc">Crabs pop out of holes — smack them before they hide. Golden crabs score big!</div>
+      <div class="name">Crab Hunt</div>
+      <div class="desc">Hunt time! Make sure the caveman's good for a week.</div>
       <div class="tag">Reflexes</div>
     </a>
   </div>
+  <img id="ptero" src="/teerectadactyl.png" alt="Pterodactyl" />
 </body>
 
 </html>

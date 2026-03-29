@@ -1,6 +1,6 @@
 const WORDS = [
-  'APPLE', 'GRAPE', 'LEMON', 'PEACH', 'BERRY',
-  'PLUMB', 'CHERRY', 'ORANGE', 'MELON', 'BANANA'
+  'SPEAR', 'GRAPE', 'STONE', 'LASER', 'CYBER',
+  'FLINT', 'TRIBE', 'ROBOT', 'BRAIN', 'METAL'
 ];
 
 const gameBoard = document.getElementById('game-board');

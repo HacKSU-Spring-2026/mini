@@ -9,19 +9,22 @@ const avgEl      = document.getElementById('avg');
 const dotsEl     = document.getElementById('round-dots');
 const resultsEl  = document.getElementById('results');
 const playAgain  = document.getElementById('play-again');
+const arrow      = document.querySelector('.arrow');
 
 let state     = 'idle';
 let startTime = 0;
 let timer     = null;
+let hitTimer  = null;
 let round     = 0;
 let times     = [];
 
 function setState(s) {
   state = s;
-  gameArea.classList.remove('waiting', 'ready', 'too-soon');
+  gameArea.classList.remove('waiting', 'ready', 'too-soon', 'hit');
   if (s === 'waiting')  gameArea.classList.add('waiting');
   if (s === 'ready')    gameArea.classList.add('ready');
   if (s === 'too-soon') gameArea.classList.add('too-soon');
+  if (s === 'hit')      gameArea.classList.add('hit');
 }
 
 function buildDots() {
@@ -33,17 +36,32 @@ function buildDots() {
   }
 }
 
+function resetArrow() {
+  arrow.classList.remove('shoot');
+  clearTimeout(hitTimer);
+}
+
 function startRound() {
   setState('waiting');
-  message.textContent = 'Wait for green...';
-  subMessage.textContent = '';
+  resetArrow();
+  message.textContent = 'Wait for the arrow...';
+  subMessage.textContent = 'Get ready to dodge!!!';
 
   const delay = 1500 + Math.random() * 3500;
   timer = setTimeout(() => {
     setState('ready');
-    message.textContent = 'Click!';
-    subMessage.textContent = '';
+    arrow.classList.add('shoot');
+    message.textContent = 'React!';
+    subMessage.textContent = 'Click before the arrow hits the wall!';
     startTime = performance.now();
+    hitTimer = setTimeout(() => {
+      if (state === 'ready') {
+        setState('hit');
+        resetArrow();
+        message.textContent = 'Hit! You lose';
+        subMessage.textContent = 'Click to try again';
+      }
+    }, 450);
   }, delay);
 }
 
@@ -57,13 +75,14 @@ function recordResult(ms) {
 }
 
 function showDone() {
+  resetSpear();
   setState('done');
   const avg = Math.round(times.reduce((a, b) => a + b, 0) / times.length);
   gameArea.classList.add('hidden');
   dotsEl.classList.add('hidden');
   resultsEl.classList.add('done');
   playAgain.classList.add('visible');
-  document.querySelector('#results .result-card:first-child .label').textContent = 'Average';
+  document.querySelector('#results .stat-card:first-child .label').textContent = 'Average';
   avgEl.textContent = avg + ' ms';
 }
 
@@ -75,24 +94,26 @@ function reset() {
   avgEl.textContent  = '--';
   buildDots();
   setState('idle');
+  resetSpear();
   message.textContent = 'Click to start';
   subMessage.textContent = '';
   gameArea.classList.remove('hidden');
   dotsEl.classList.remove('hidden');
   resultsEl.classList.remove('done');
   playAgain.classList.remove('visible');
-  document.querySelector('#results .result-card:first-child .label').textContent = 'Last';
+  document.querySelector('#results .stat-card:first-child .label').textContent = 'Last';
 }
 
 gameArea.addEventListener('click', () => {
   if (state === 'waiting') {
     clearTimeout(timer);
+    resetArrow();
     setState('too-soon');
     message.textContent = 'Too soon!';
     subMessage.textContent = 'Click to try this round again';
     return;
   }
-  if (state === 'too-soon') { startRound(); return; }
+  if (state === 'too-soon' || state === 'hit') { startRound(); return; }
   if (state === 'ready') {
     const ms = Math.round(performance.now() - startTime);
     recordResult(ms);
@@ -101,6 +122,7 @@ gameArea.addEventListener('click', () => {
       showDone();
     } else {
       round++;
+      resetArrow();
       setState('idle');
       message.textContent = `${ms} ms — Click for next round`;
       subMessage.textContent = `Round ${round} of ${TOTAL_ROUNDS}`;

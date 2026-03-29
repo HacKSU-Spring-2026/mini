@@ -1,9 +1,9 @@
 const PARAGRAPHS = [
-  "The quick brown fox jumps over the lazy dog near the riverbank while the sun sets behind the mountains casting long shadows across the valley floor.",
-  "Typing speed is a skill that improves with consistent practice and focus. The more you type without looking at the keyboard the faster and more accurate you will become over time.",
+  "The lightsaber of the caveman was a stick. Until we provided him with a real one. Turns out his is purple, symbolizing both good and evil. He is a complex character with a mysterious past, but one thing is clear: he's picking it up fast!",
+  "The caveman has a pet dinosaur called ßüüööü, who he surprisingly trained to whistle. The caveman and ßüüööü also share a love for technology. Imagine a caveman coming at you full speed on top of a whistling dinosaur, wielding a lightsaber.",
   "A journey of a thousand miles begins with a single step. Every expert was once a beginner who refused to give up when things became difficult or uncertain.",
   "The universe is under no obligation to make sense to you. Science is not a belief system but a method of discovering what is actually true about the world around us.",
-  "Good code is like a good joke — it needs no explanation. Writing clean readable software is one of the most valuable skills a developer can cultivate throughout their career.",
+  "The caveman's diet consists of leaves, fruits, meat, and nuts. I personally can't imagine living in a time without pizza provided by HacKSU.",
 ];
 
 const paragraphBox  = document.getElementById('paragraph-box');
