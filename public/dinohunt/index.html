@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,7 +19,9 @@
             width: min(860px, 100%);
         }
 
-        .top-bar { display: none; }
+        .top-bar {
+            display: none;
+        }
 
         .title-block h1 {
             font-size: 2.2rem;
@@ -29,7 +32,12 @@
             background-clip: text;
             margin: 0;
         }
-        .title-block p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+
+        .title-block p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
 
         .hud {
             display: flex;
@@ -37,7 +45,10 @@
             margin-bottom: 14px;
             flex-wrap: wrap;
         }
-        .hud .stat-card { flex: 1 1 120px; }
+
+        .hud .stat-card {
+            flex: 1 1 120px;
+        }
 
         #world {
             background: var(--surface);
@@ -52,7 +63,7 @@
             width: 100%;
             height: 340px;
             background: radial-gradient(circle at 50% 0%, #1a3a1a 0%, #0d1f0d 45%, #060e06 100%);
-            box-shadow: inset 0 0 45px rgba(0,0,0,0.6);
+            box-shadow: inset 0 0 45px rgba(0, 0, 0, 0.6);
             overflow: hidden;
         }
 
@@ -77,9 +88,21 @@
             user-select: none;
             font-weight: 800;
         }
-        .dino-regular { width: 44px;  height: 44px; }
-        .dino-tough   { width: 56px;  height: 56px; }
-        .dino-boss    { width: 88px;  height: 88px; }
+
+        .dino-regular {
+            width: 44px;
+            height: 44px;
+        }
+
+        .dino-tough {
+            width: 56px;
+            height: 56px;
+        }
+
+        .dino-boss {
+            width: 88px;
+            height: 88px;
+        }
 
         .spear {
             position: absolute;
@@ -103,7 +126,7 @@
             font-size: 15px;
             font-weight: 700;
             color: var(--green);
-            text-shadow: 0 0 8px rgba(0,0,0,0.8);
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
             pointer-events: none;
         }
 
@@ -150,7 +173,9 @@
             font-size: 0.95rem;
         }
 
-        .hidden { display: none; }
+        .hidden {
+            display: none;
+        }
 
         #notes {
             color: var(--muted);
@@ -159,6 +184,7 @@
         }
     </style>
 </head>
+
 <body>
     <nav>
         <span class="logo">BG</span>
@@ -169,7 +195,9 @@
 
     <div id="app">
         <div class="title-block" style="margin-bottom:20px;">
-            <h1><img src="/spear.png" alt="spear" style="width:2rem;height:2rem;object-fit:contain;vertical-align:middle;margin-right:8px;">Dino Hunt</h1>
+            <h1><img src="/spear.png" alt="spear"
+                    style="width:2rem;height:2rem;object-fit:contain;vertical-align:middle;margin-right:8px;">Dino Hunt
+            </h1>
             <p>Defend your village from waves of dinosaurs!</p>
         </div>
 
@@ -190,7 +218,7 @@
 
         <div id="world">
             <div id="attack-zone"></div>
-            <div id="village-zone">🏕️ Caveman Village — Click to throw spear</div>
+            <div id="village-zone">Caveman Village — Click to throw spear</div>
             <div id="start-overlay" class="start-overlay">
                 <h2>Tribe vs Dino</h2>
                 <p>Defend your village from wave after wave of dinosaurs.</p>
@@ -204,9 +232,9 @@
         </div>
 
         <div class="controls">
-            <button id="spike-btn" class="btn-ghost">🪤 Spike Trap</button>
+            <button id="spike-btn" class="btn-ghost">Spike Trap</button>
             <span id="spike-cd" class="cooldown">Ready</span>
-            <button id="fire-btn" class="btn-ghost">🔥 Fire Trap</button>
+            <button id="fire-btn" class="btn-ghost">Fire Trap</button>
             <span id="fire-cd" class="cooldown">Ready</span>
         </div>
 
@@ -215,4 +243,5 @@
 
     <script src="game.js"></script>
 </body>
+
 </html>
