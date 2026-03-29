@@ -14,7 +14,7 @@ const fireCdText = document.getElementById('fire-cd');
 
 const INITIAL_HEALTH = 5;
 const TRAP_COOLDOWN = { spike: 8000, fire: 12000 };
-const SPEAR_SPEED = 520; // px per second (slower projectile)
+const SPEAR_SPEED = 520;
 
 const DINO_TYPES = [
     { emoji: '🦕', className: 'dino-regular', hp: 1, speed: 42, points: 6 },
@@ -79,7 +79,7 @@ function followWave() {
         bossSpawned: false,
         bossAlive: false,
         isBossWave,
-        spawnDelay: Math.max(1200, 2100 - wave * 30) // slower spawn pacing
+        spawnDelay: Math.max(1200, 2100 - wave * 30)
     };
 }
 
@@ -94,7 +94,7 @@ function spawnDino(type, isBoss = false) {
             id: crypto.randomUUID(),
             x,
             y,
-            hp: 1, // one-hit boss by request
+            hp: 1,
             maxHp: 1,
             speed: Math.max(18, 24 - wave * 0.8),
             points: 45 + wave * 25,
@@ -109,7 +109,7 @@ function spawnDino(type, isBoss = false) {
             id: crypto.randomUUID(),
             x,
             y,
-            hp: 1, // one hit to kill all dinos
+            hp: 1,
             maxHp: 1,
             speed: Math.max(12, selection.speed + wave * 1.0),
             points: selection.points + Math.floor(wave * 1.2),

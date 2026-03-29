@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find Oursaurs - Memory Game</title>
+    <link rel="stylesheet" href="/shared.css" />
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #666;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #333;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #95a5a6;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-top: 5px;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
+            padding: 20px;
+            border-radius: 15px;
+            min-height: 400px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border: 3px solid #2c3e50;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 2.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            user-select: none;
+            min-height: 100px;
+            position: relative;
+        }
+
+        .card:hover:not(.matched) {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card.flipped {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .card.matched {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            cursor: default;
+            opacity: 0.8;
+            transform: scale(0.95);
+        }
+
+        .card.matched::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            min-width: 150px;
+        }
+
+        .start-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .difficulty-btn {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+            min-width: 120px;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+        }
+
+        .message {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 25px;
+            color: #2c3e50;
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.9) 0%, rgba(41, 128, 185, 0.9) 100%);
+            border-radius: 15px;
+            color: white;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .game-over h2 {
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+        }
+
+        .game-over p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Games</a>
+
+        <h1>🧠 Find Oursaurs</h1>
+        <p class="subtitle">Match all dinosaur pairs! Test your memory skills.</p>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">⏱️ Moves</div>
+                <div class="stat-value" id="moves">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🎯 Matches</div>
+                <div class="stat-value" id="matches">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">⏰ Time</div>
+                <div class="stat-value" id="time">0s</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">✨ Best</div>
+                <div class="stat-value" id="best">-</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="difficulty-btn active" data-difficulty="easy">Easy (8)</button>
+            <button class="difficulty-btn" data-difficulty="medium">Medium (12)</button>
+            <button class="difficulty-btn" data-difficulty="hard">Hard (16)</button>
+            <button class="start-btn" id="startBtn">🎮 Start Game</button>
+        </div>
+
+        <div class="game-board" id="gameBoard"></div>
+
+        <div class="message" id="message">Click START GAME to begin!</div>
+
+        <div class="game-over" id="gameOver">
+            <h2>🎉 You Won!</h2>
+            <p id="winMessage">Congratulations!</p>
+            <button class="start-btn" onclick="location.reload()" style="margin-top: 15px;">Play Again</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>

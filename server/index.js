@@ -114,6 +114,10 @@ app.get('/gockthon', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/gockthon/index.html'));
 });
 
+app.get('/quizosaurs', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/quizosaurs/index.html'));
+});
+
 // ---------- Socket.IO for Gockthon multiplayer
 const PLAYER_COLORS = ['#e45517', '#87d1ff', '#edca2d', '#4db87d', '#b17aff', '#ff8f5a'];
 
