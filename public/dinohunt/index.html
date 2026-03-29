@@ -1,70 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tribe vs Dino - Dino Hunt</title>
+    <title>Dino Hunt - Tribe vs Dino</title>
     <link rel="stylesheet" href="/shared.css" />
     <style>
         body {
-            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle at 50% 20%, #7a6a49 0%, #2d2420 40%, #0a0a08 100%);
-            color: var(--text);
+            min-height: 100vh;
+            padding: 80px 20px 28px;
         }
 
         #app {
-            width: min(860px, 95vw);
-            margin: 14px;
+            width: min(860px, 100%);
         }
+
+        .top-bar { display: none; }
+
+        .title-block h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green), #5ab840);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+        .title-block p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
 
         .hud {
             display: flex;
             gap: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
             flex-wrap: wrap;
         }
+        .hud .stat-card { flex: 1 1 120px; }
 
-        .hud .stat-card {
-            flex: 1 1 120px;
-        }
-
-        .panel {
+        #world {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 10px;
-        }
-
-        #world {
-            margin-top: 10px;
-            border: 2px solid #fff3;
-            border-radius: 14px;
             overflow: hidden;
-            background: linear-gradient(to bottom, #aaddff 0%, #4a6eef 40%, #281f2f 100%);
+            margin-bottom: 12px;
         }
 
         #attack-zone {
             position: relative;
             width: 100%;
             height: 340px;
-            background: radial-gradient(circle at 50% 0%, #4a4d55 0%, #1f2027 45%, #0b0a0a 100%);
-            box-shadow: inset 0 0 45px #0009;
+            background: radial-gradient(circle at 50% 0%, #1a3a1a 0%, #0d1f0d 45%, #060e06 100%);
+            box-shadow: inset 0 0 45px rgba(0,0,0,0.6);
             overflow: hidden;
         }
 
         #village-zone {
             position: relative;
             width: 100%;
-            height: 130px;
-            background: linear-gradient(to top, #432f1d, #86633f);
-            border-top: 3px solid #b09866;
+            height: 120px;
+            background: linear-gradient(to top, #0d2e10, #1a4d1e);
+            border-top: 2px solid rgba(154, 225, 106, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
         .dino {
@@ -74,55 +77,42 @@
             user-select: none;
             font-weight: 800;
         }
-
-        .dino-regular {
-            font-size: 32px;
-        }
-
-        .dino-tough {
-            font-size: 48px;
-        }
-
-        .dino-boss {
-            font-size: 68px;
-        }
+        .dino-regular { width: 44px;  height: 44px; }
+        .dino-tough   { width: 56px;  height: 56px; }
+        .dino-boss    { width: 88px;  height: 88px; }
 
         .spear {
             position: absolute;
-            width: 8px;
-            height: 18px;
-            border-radius: 4px;
-            background: linear-gradient(180deg, #fff 0%, #ffcb3c 100%);
+            width: 32px;
+            height: 32px;
             pointer-events: none;
-            transform: translate(-50%, -50%) rotate(-15deg);
+            transform: translate(-50%, -50%);
+            object-fit: contain;
         }
 
         .trap-zone {
             position: absolute;
-            border: 2px dashed #ffea00;
+            border: 2px dashed var(--green);
             border-radius: 50%;
             pointer-events: none;
-            opacity: 0.9;
+            opacity: 0.7;
         }
 
         .effect-text {
             position: absolute;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            color: #fff;
-            text-shadow: 0 0 8px #000;
+            color: var(--green);
+            text-shadow: 0 0 8px rgba(0,0,0,0.8);
             pointer-events: none;
         }
 
         .controls {
             display: flex;
             gap: 10px;
-            margin-top: 8px;
+            margin-bottom: 10px;
             align-items: center;
-        }
-
-        .controls button {
-            min-width: 120px;
+            flex-wrap: wrap;
         }
 
         .cooldown {
@@ -134,54 +124,62 @@
         .end-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(10, 10, 20, 0.7);
+            background: rgba(6, 14, 6, 0.82);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
             z-index: 50;
         }
 
         .start-overlay h2,
         .end-overlay h2 {
             font-size: 2rem;
-            color: #ffd449;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green), #5ab840);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .start-overlay p,
         .end-overlay p {
-            color: #fff;
+            color: var(--muted);
             margin: 0;
+            font-size: 0.95rem;
         }
 
-        .start-overlay .btn-secondary,
-        .end-overlay .btn-secondary {
-            color: #fff;
-            border-color: #fff;
-        }
-
-        .hidden {
-            display: none;
-        }
+        .hidden { display: none; }
 
         #notes {
-            margin-top: 10px;
-            color: #d1d1ed;
-            font-size: 0.9rem;
+            color: var(--muted);
+            font-size: 0.82rem;
+            margin-top: 6px;
         }
     </style>
 </head>
-
 <body>
+    <nav>
+        <span class="logo">BG</span>
+        <a href="/">Home</a>
+        <span class="sep">›</span>
+        <span class="current">Dino Hunt</span>
+    </nav>
+
     <div id="app">
+        <div class="title-block" style="margin-bottom:20px;">
+            <h1><img src="/spear.png" alt="spear" style="width:2rem;height:2rem;object-fit:contain;vertical-align:middle;margin-right:8px;">Dino Hunt</h1>
+            <p>Defend your village from waves of dinosaurs!</p>
+        </div>
+
         <div class="hud">
             <div class="stat-card">
                 <div class="label">Score</div>
                 <div id="score" class="value">0</div>
             </div>
             <div class="stat-card">
-                <div class="label">Village Health</div>
+                <div class="label">Village HP</div>
                 <div id="health" class="value">5</div>
             </div>
             <div class="stat-card">
@@ -190,9 +188,9 @@
             </div>
         </div>
 
-        <div id="world" class="panel">
+        <div id="world">
             <div id="attack-zone"></div>
-            <div id="village-zone">🏕️ Caveman Village - Click anywhere to throw spear</div>
+            <div id="village-zone">🏕️ Caveman Village — Click to throw spear</div>
             <div id="start-overlay" class="start-overlay">
                 <h2>Tribe vs Dino</h2>
                 <p>Defend your village from wave after wave of dinosaurs.</p>
@@ -206,16 +204,15 @@
         </div>
 
         <div class="controls">
-            <button id="spike-btn" class="btn-secondary">Spike Trap</button>
+            <button id="spike-btn" class="btn-ghost">🪤 Spike Trap</button>
             <span id="spike-cd" class="cooldown">Ready</span>
-            <button id="fire-btn" class="btn-secondary">Fire Trap</button>
+            <button id="fire-btn" class="btn-ghost">🔥 Fire Trap</button>
             <span id="fire-cd" class="cooldown">Ready</span>
         </div>
 
-        <div id="notes">* Boss appears every 3 waves. Kill it for extra points.</div>
+        <div id="notes">* Boss appears every 3 waves — kill it for extra points.</div>
     </div>
 
     <script src="game.js"></script>
 </body>
-
 </html>

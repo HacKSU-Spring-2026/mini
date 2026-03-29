@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crab Hunt</title>
+    <link rel="stylesheet" href="/shared.css" />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 80px 20px 28px;
+        }
+
+        #app { width: min(600px, 100%); }
+
+        .title-block h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green), #5ab840);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+        .title-block p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+
+        .hud {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .hud .stat-card { flex: 1 1 100px; }
+
+        /* ── GRID ── */
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            max-width: 420px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hole {
+            aspect-ratio: 1;
+            background: radial-gradient(circle at 50% 80%, #1a0e06, #0d0804);
+            border: 2px solid rgba(255,255,255,0.07);
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: inset 0 8px 24px rgba(0,0,0,0.7);
+        }
+
+        .hole::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: inset 0 -6px 18px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+
+        /* crab sits below the hole, slides up when active */
+        .crab {
+            position: absolute;
+            bottom: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            aspect-ratio: 1;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            line-height: 1;
+            text-align: center;
+            transition: bottom 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            user-select: none;
+            filter: drop-shadow(0 -4px 8px rgba(0,0,0,0.6));
+        }
+
+        .hole.up .crab   { bottom: 8%; }
+        .hole.smacked .crab {
+            bottom: -100%;
+            transition: bottom 0.12s ease-in;
+            filter: brightness(3) drop-shadow(0 0 12px var(--green));
+        }
+
+        /* ripple on smack */
+        .hole.smacked::before {
+            content: '';
+            position: absolute;
+            inset: 10%;
+            border-radius: 50%;
+            border: 3px solid var(--green);
+            animation: ripple 0.35s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes ripple {
+            0%   { opacity: 1; transform: scale(0.6); }
+            100% { opacity: 0; transform: scale(1.4); }
+        }
+
+        /* floating +1 */
+        .pop {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--green);
+            pointer-events: none;
+            animation: floatUp 0.6s ease forwards;
+            z-index: 10;
+        }
+        .pop.golden { color: gold; }
+        @keyframes floatUp {
+            0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-40px); }
+        }
+
+        /* ── OVERLAYS ── */
+        #arena {
+            position: relative;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: -10px;
+            background: rgba(6,14,6,0.88);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            z-index: 20;
+            border-radius: 16px;
+        }
+        .overlay h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green), #5ab840);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .overlay p { color: var(--muted); font-size: 0.95rem; margin: 0; text-align: center; }
+        .hidden { display: none; }
+
+        #notes { color: var(--muted); font-size: 0.82rem; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <span class="logo">BG</span>
+        <a href="/">Home</a>
+        <span class="sep">›</span>
+        <span class="current">Crab Hunt</span>
+    </nav>
+
+    <div id="app">
+        <div class="title-block" style="margin-bottom:20px;">
+            <h1>Crab Hunt</h1>
+            <p>Smack the crabs before they disappear!</p>
+        </div>
+
+        <div class="hud">
+            <div class="stat-card">
+                <div class="label">Score</div>
+                <div id="score" class="value">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Missed</div>
+                <div id="missed" class="value">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Time</div>
+                <div id="timer" class="value">30</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Best</div>
+                <div id="best" class="value">—</div>
+            </div>
+        </div>
+
+        <div id="arena">
+            <div id="grid"></div>
+
+            <div id="start-overlay" class="overlay">
+                <h2>Crab Hunt</h2>
+                <p>Crabs pop out of the ground.<br>Smack them before they hide!</p>
+                <button id="start-btn" class="btn-primary">Start Hunt</button>
+            </div>
+
+            <div id="end-overlay" class="overlay hidden">
+                <h2>Hunt Over!</h2>
+                <p id="end-summary"></p>
+                <button id="restart-btn" class="btn-primary">Hunt Again</button>
+            </div>
+        </div>
+
+        <div id="notes">* Golden crabs are worth 3 points — but disappear faster!</div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

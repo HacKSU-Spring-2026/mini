@@ -17,9 +17,9 @@ const TRAP_COOLDOWN = { spike: 8000, fire: 12000 };
 const SPEAR_SPEED = 520;
 
 const DINO_TYPES = [
-    { emoji: '🦕', className: 'dino-regular', hp: 1, speed: 42, points: 6 },
-    { emoji: '🦖', className: 'dino-tough', hp: 1, speed: 34, points: 14 },
-    { emoji: '🐲', className: 'dino-tough', hp: 1, speed: 28, points: 22 }
+    { img: '/dino.png',           className: 'dino-regular', hp: 1, speed: 42, points: 6 },
+    { img: '/dino2.png', className: 'dino-tough',   hp: 1, speed: 34, points: 14 },
+    { img: '/dino3.png',        className: 'dino-tough',   hp: 1, speed: 28, points: 22 }
 ];
 
 let score = 0;
@@ -100,7 +100,7 @@ function spawnDino(type, isBoss = false) {
             points: 45 + wave * 25,
             size: 88,
             className: 'dino-boss',
-            emoji: '🦕',
+            img: '/dino.png',
             boss: true
         };
     } else {
@@ -115,14 +115,18 @@ function spawnDino(type, isBoss = false) {
             points: selection.points + Math.floor(wave * 1.2),
             size: selection.className === 'dino-regular' ? 44 : 56,
             className: selection.className,
-            emoji: selection.emoji,
+            img: selection.img,
             boss: false
         };
     }
 
     const element = document.createElement('div');
     element.className = `dino ${dino.className}`;
-    element.innerText = dino.emoji;
+    const imgEl = document.createElement('img');
+    imgEl.src = dino.img;
+    imgEl.alt = 'dino';
+    imgEl.style.cssText = 'width:100%;height:100%;object-fit:contain;pointer-events:none;';
+    element.appendChild(imgEl);
     element.style.left = `${dino.x}px`;
     element.style.top = `${dino.y}px`;
     element.style.transform = 'translate(-50%, -50%)';
@@ -237,11 +241,16 @@ function throwSpear(targetX, targetY) {
     const vx = (dx / dist) * SPEAR_SPEED;
     const vy = (dy / dist) * SPEAR_SPEED;
 
-    const spearEl = document.createElement('div');
+    const angle = Math.atan2(vy, vx) * (180 / Math.PI) + 90;
+
+    const spearEl = document.createElement('img');
+    spearEl.src = '/spear.png';
+    spearEl.alt = 'spear';
     spearEl.className = 'spear';
+    spearEl.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
     attackZone.appendChild(spearEl);
 
-    spears.push({ x: startX, y: startY, vx, vy, element: spearEl });
+    spears.push({ x: startX, y: startY, vx, vy, angle, element: spearEl });
 }
 
 function showFloatingText(x, y, text, color) {

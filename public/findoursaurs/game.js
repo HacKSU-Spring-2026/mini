@@ -1,6 +1,16 @@
 // Find Oursaurs - Memory Matching Game
 
-const dinoEmojis = ['🦖', '🦕', '🦣', '🦖', '🦕', '🦖', '🦖', '🦕'];
+// All 5 available PNGs as card pairs
+const dinoEmojis = [
+    '/dino.png',
+    '/dino2.png',
+    '/dino3.png',
+    '/caveman.png',
+    '/spear.png',
+    '/dino.png',
+    '/dino2.png',
+    '/dino3.png'
+];
 
 let gameState = {
     cards: [],
@@ -49,7 +59,7 @@ function startGame() {
     gameState.gameRunning = true;
     gameState.startTime = Date.now();
     gameOverDiv.style.display = 'none';
-    messageEl.textContent = '🎮 Game Started! Find matching pairs.';
+    messageEl.textContent = 'Game Started! Find matching pairs.';
     startTimer();
 }
 
@@ -82,6 +92,14 @@ function setupCards() {
     renderBoard();
 }
 
+function cardContent(src) {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = 'dino';
+    img.style.cssText = 'width:60%;height:60%;object-fit:contain;pointer-events:none;';
+    return img;
+}
+
 function renderBoard() {
     gameBoardEl.innerHTML = '';
     gameBoardEl.style.gridTemplateColumns = `repeat(${getGridCols()}, 1fr)`;
@@ -93,10 +111,10 @@ function renderBoard() {
 
         if (gameState.matched.includes(index)) {
             cardEl.classList.add('matched');
-            cardEl.textContent = card.emoji;
+            cardEl.appendChild(cardContent(card.emoji));
         } else if (gameState.flipped.includes(index)) {
             cardEl.classList.add('flipped');
-            cardEl.textContent = card.emoji;
+            cardEl.appendChild(cardContent(card.emoji));
         } else {
             cardEl.textContent = '?';
         }
@@ -121,7 +139,8 @@ function flipCard(index, cardEl) {
 
     gameState.flipped.push(index);
     cardEl.classList.add('flipped');
-    cardEl.textContent = gameState.cards[index].emoji;
+    cardEl.innerHTML = '';
+    cardEl.appendChild(cardContent(gameState.cards[index].emoji));
 
     if (gameState.flipped.length === 2) {
         gameState.moves++;
@@ -141,7 +160,7 @@ function checkMatch() {
         gameState.matched.push(index1, index2);
         gameState.matches++;
         matchesEl.textContent = gameState.matches;
-        messageEl.textContent = '✅ Match found!';
+        messageEl.textContent = 'Match found!';
         gameState.flipped = [];
         renderBoard();
 
@@ -151,7 +170,7 @@ function checkMatch() {
         }
     } else {
         // No match
-        messageEl.textContent = '❌ Not a match. Try again!';
+        messageEl.textContent = 'Not a match. Try again!';
         setTimeout(() => {
             gameState.flipped = [];
             renderBoard();

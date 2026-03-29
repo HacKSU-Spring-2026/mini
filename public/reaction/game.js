@@ -75,7 +75,7 @@ function recordResult(ms) {
 }
 
 function showDone() {
-  resetSpear();
+  resetArrow();
   setState('done');
   const avg = Math.round(times.reduce((a, b) => a + b, 0) / times.length);
   gameArea.classList.add('hidden');
@@ -94,7 +94,7 @@ function reset() {
   avgEl.textContent  = '--';
   buildDots();
   setState('idle');
-  resetSpear();
+  resetArrow();
   message.textContent = 'Click to start';
   subMessage.textContent = '';
   gameArea.classList.remove('hidden');
@@ -116,16 +116,17 @@ gameArea.addEventListener('click', () => {
   if (state === 'too-soon' || state === 'hit') { startRound(); return; }
   if (state === 'ready') {
     const ms = Math.round(performance.now() - startTime);
+    clearTimeout(hitTimer);
+    resetArrow();
     recordResult(ms);
+    round++;
     buildDots();
     if (round >= TOTAL_ROUNDS) {
       showDone();
     } else {
-      round++;
-      resetArrow();
       setState('idle');
       message.textContent = `${ms} ms — Click for next round`;
-      subMessage.textContent = `Round ${round} of ${TOTAL_ROUNDS}`;
+      subMessage.textContent = `Round ${round + 1} of ${TOTAL_ROUNDS}`;
     }
     return;
   }
