@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tribe vs Dino - Dino Hunt</title>
+    <link rel="stylesheet" href="/shared.css" />
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 20%, #7a6a49 0%, #2d2420 40%, #0a0a08 100%);
+            color: var(--text);
+        }
+
+        #app {
+            width: min(860px, 95vw);
+            margin: 14px;
+        }
+
+        .hud {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hud .stat-card {
+            flex: 1 1 120px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 10px;
+        }
+
+        #world {
+            margin-top: 10px;
+            border: 2px solid #fff3;
+            border-radius: 14px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #aaddff 0%, #4a6eef 40%, #281f2f 100%);
+        }
+
+        #attack-zone {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            background: radial-gradient(circle at 50% 0%, #4a4d55 0%, #1f2027 45%, #0b0a0a 100%);
+            box-shadow: inset 0 0 45px #0009;
+            overflow: hidden;
+        }
+
+        #village-zone {
+            position: relative;
+            width: 100%;
+            height: 130px;
+            background: linear-gradient(to top, #432f1d, #86633f);
+            border-top: 3px solid #b09866;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dino {
+            position: absolute;
+            text-align: center;
+            pointer-events: none;
+            user-select: none;
+            font-weight: 800;
+        }
+
+        .dino-regular {
+            font-size: 32px;
+        }
+
+        .dino-tough {
+            font-size: 48px;
+        }
+
+        .dino-boss {
+            font-size: 68px;
+        }
+
+        .spear {
+            position: absolute;
+            width: 8px;
+            height: 18px;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #fff 0%, #ffcb3c 100%);
+            pointer-events: none;
+            transform: translate(-50%, -50%) rotate(-15deg);
+        }
+
+        .trap-zone {
+            position: absolute;
+            border: 2px dashed #ffea00;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .effect-text {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 8px #000;
+            pointer-events: none;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .controls button {
+            min-width: 120px;
+        }
+
+        .cooldown {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .start-overlay,
+        .end-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 10, 20, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .start-overlay h2,
+        .end-overlay h2 {
+            font-size: 2rem;
+            color: #ffd449;
+        }
+
+        .start-overlay p,
+        .end-overlay p {
+            color: #fff;
+            margin: 0;
+        }
+
+        .start-overlay .btn-secondary,
+        .end-overlay .btn-secondary {
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #notes {
+            margin-top: 10px;
+            color: #d1d1ed;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="hud">
+            <div class="stat-card">
+                <div class="label">Score</div>
+                <div id="score" class="value">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Village Health</div>
+                <div id="health" class="value">5</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Wave</div>
+                <div id="wave" class="value">0</div>
+            </div>
+        </div>
+
+        <div id="world" class="panel">
+            <div id="attack-zone"></div>
+            <div id="village-zone">🏕️ Caveman Village - Click anywhere to throw spear</div>
+            <div id="start-overlay" class="start-overlay">
+                <h2>Tribe vs Dino</h2>
+                <p>Defend your village from wave after wave of dinosaurs.</p>
+                <button id="start-btn" class="btn-primary">Start Game</button>
+            </div>
+            <div id="end-overlay" class="end-overlay hidden">
+                <h2>Game Over</h2>
+                <p id="end-summary">You reached wave X with score Y.</p>
+                <button id="restart-btn" class="btn-primary">Play Again</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="spike-btn" class="btn-secondary">Spike Trap</button>
+            <span id="spike-cd" class="cooldown">Ready</span>
+            <button id="fire-btn" class="btn-secondary">Fire Trap</button>
+            <span id="fire-cd" class="cooldown">Ready</span>
+        </div>
+
+        <div id="notes">* Boss appears every 3 waves. Kill it for extra points.</div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>

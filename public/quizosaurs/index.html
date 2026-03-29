@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quizosaurs - Dinosaur Trivia Challenge</title>
+    <link rel="stylesheet" href="/shared.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c2c 0%, #2a5a3a 50%, #1e3c2c 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated dinosaur footprints */
+        body::before {
+            content: "🦖";
+            position: fixed;
+            bottom: 20px;
+            left: -50px;
+            font-size: 40px;
+            opacity: 0.3;
+            animation: walkAcross 15s linear infinite;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "🦕";
+            position: fixed;
+            bottom: 60px;
+            left: -50px;
+            font-size: 35px;
+            opacity: 0.3;
+            animation: walkAcross 18s linear infinite;
+            animation-delay: -5s;
+            pointer-events: none;
+        }
+
+        @keyframes walkAcross {
+            0% {
+                transform: translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.3;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .card {
+            width: min(800px, 96vw);
+            background: linear-gradient(135deg, #fff9e8 0%, #fff0d8 100%);
+            border-radius: 48px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #f7b42c 0%, #fc575e 100%);
+            padding: 24px 32px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: "🦖🦕🦖";
+            position: absolute;
+            right: -20px;
+            top: -20px;
+            font-size: 80px;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.5px;
+        }
+
+        h1 span {
+            font-size: 2rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .back-link {
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 40px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-3px);
+        }
+
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            padding: 24px 32px;
+            background: linear-gradient(135deg, #f5e6d3 0%, #ecd9c0 100%);
+            border-bottom: 3px solid #fc575e;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8b7355;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fc575e;
+            line-height: 1;
+            margin-top: 8px;
+        }
+
+        .question-area {
+            padding: 32px;
+            background: white;
+        }
+
+        .dino-emoji {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 16px;
+            animation: pulse 1s ease-in-out;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .clue-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e2f;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .hint-badge {
+            text-align: center;
+            color: #8b7355;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+            padding: 8px;
+            background: #fef5e8;
+            border-radius: 20px;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .answers {
+            display: grid;
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .answer-btn {
+            background: linear-gradient(135deg, #f8f4e8 0%, #f0e8d8 100%);
+            border: 2px solid #e0c8a8;
+            border-radius: 60px;
+            padding: 16px 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4a3b2a;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .answer-btn::before {
+            content: "🦕";
+            font-size: 1.3rem;
+            opacity: 0.6;
+        }
+
+        .answer-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #ffe6b3 0%, #ffdd99 100%);
+            transform: translateX(8px);
+            border-color: #fc575e;
+        }
+
+        .answer-btn.correct {
+            background: linear-gradient(135deg, #9bdeac 0%, #6fbf4c 100%);
+            border-color: #2e7d32;
+            color: white;
+            animation: correctFlash 0.5s ease;
+        }
+
+        .answer-btn.correct::before {
+            content: "✅";
+        }
+
+        .answer-btn.wrong {
+            background: linear-gradient(135deg, #f5b7b7 0%, #e65c5c 100%);
+            border-color: #c62828;
+            color: white;
+            animation: wrongShake 0.3s ease;
+        }
+
+        .answer-btn.wrong::before {
+            content: "❌";
+        }
+
+        @keyframes correctFlash {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes wrongShake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .result-area {
+            background: #fef5e8;
+            padding: 16px 32px;
+            border-radius: 60px;
+            margin: 8px 0;
+            text-align: center;
+        }
+
+        .result-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #fc575e 0%, #f7b42c 100%);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(252, 87, 94, 0.4);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e0c8a8;
+            margin-top: 8px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fc575e, #f7b42c);
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        .feedback-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            animation: slideInRight 0.3s ease;
+            z-index: 1000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .streak-indicator {
+            background: #ffd966;
+            color: #8b5a2b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        @media (max-width: 600px) {
+            .card-header {
+                padding: 16px 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .clue-text {
+                font-size: 1.2rem;
+            }
+
+            .answer-btn {
+                padding: 12px 16px;
+                font-size: 0.95rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="header-content">
+                <h1>🦕 Quizosaurs <span>⚡</span></h1>
+                <a href="/" class="back-link">← Back to Games</a>
+            </div>
+            <p style="margin-top: 8px; opacity: 0.9;">Test your dinosaur knowledge! Can you identify them from clues?
+            </p>
+        </div>
+
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <div class="stat-label">🏆 SCORE</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">📊 PROGRESS</div>
+                <div class="stat-value" id="current">0</div>
+                <div style="font-size: 0.85rem;">/ <span id="total">10</span></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">✅ CORRECT</div>
+                <div class="stat-value" id="correct">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🔥 STREAK</div>
+                <div class="stat-value" id="streak">0</div>
+            </div>
+        </div>
+
+        <div class="question-area">
+            <div class="dino-emoji" id="dinoEmoji">🦖</div>
+            <div class="clue-text" id="questionText">Loading dinosaurs...</div>
+            <div class="hint-badge">
+                <span>💡 Fun fact: Dinosaurs ruled Earth for over 165 million years!</span>
+            </div>
+
+            <div class="answers" id="answers"></div>
+
+            <div class="result-area">
+                <div class="result-text" id="resultText">
+                    <span>🎮</span> Click an answer to begin!
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <div class="actions">
+                <button class="action-btn" id="skipBtn">⏭️ Skip Question</button>
+                <button class="action-btn" id="restartBtn">🔄 Restart Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
