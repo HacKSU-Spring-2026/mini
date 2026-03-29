@@ -27,6 +27,18 @@ app.get('/crabs', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/crabs/index.html'));
 });
 
+app.get('/dinohunt', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/dinohunt/index.html'));
+});
+
+app.get('/findoursaurs', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/findoursaurs/index.html'));
+});
+
+app.get('/quizosaurs', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/quizosaurs/index.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`); // log the URL once the server is ready
 });

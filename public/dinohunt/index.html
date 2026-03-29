@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tribe vs Dino - Tower Defense</title>
+    <link rel="stylesheet" href="/shared.css" />
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #666;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #333;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #8b4513;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .game-space {
+            background: linear-gradient(135deg, #87ceeb 0%, #e0f6ff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            min-height: 300px;
+            position: relative;
+            border: 3px solid #4a90e2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-item {
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            color: #e74c3c;
+            font-size: 1.8rem;
+            margin-top: 5px;
+        }
+
+        .camp {
+            background: linear-gradient(135deg, #d4a574 0%, #a0826d 100%);
+            border: 3px solid #654321;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .enemies {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            min-height: 60px;
+            align-items: flex-end;
+        }
+
+        .enemy {
+            font-size: 3rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .enemy:hover {
+            transform: scale(1.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .trap-btn {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+
+        .trap-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+        }
+
+        .start-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .message {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            min-height: 30px;
+            color: #2c3e50;
+        }
+
+        .wave-info {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #8b4513;
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.9) 0%, rgba(192, 57, 43, 0.9) 100%);
+            border-radius: 15px;
+            color: white;
+            display: none;
+        }
+
+        .game-over h2 {
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+        }
+
+        .game-over p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .game-over button {
+            margin-top: 20px;
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Games</a>
+
+        <h1>🦖 Tribe vs Dino</h1>
+        <p class="subtitle">Defend your camp! Click dinosaurs to defeat them before they eat your tribe.</p>
+
+        <div class="game-space">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">🏠 Tribe Health</div>
+                    <div class="stat-value" id="health">100</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">🌊 Wave</div>
+                    <div class="stat-value" id="wave">1</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">⚔️ Kills</div>
+                    <div class="stat-value" id="kills">0</div>
+                </div>
+            </div>
+
+            <div class="camp">🏘️ YOUR CAMP</div>
+
+            <div class="enemies" id="enemyContainer"></div>
+
+            <div class="message" id="message">👇 Click on dinosaurs to defeat them!</div>
+
+            <div class="wave-info" id="waveInfo">Wave 1 - 3 dinosaurs incoming...</div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="trap-btn" id="spikeBtn">🔪 Place Spike Trap (Slow)</button>
+            <button class="trap-btn" id="fireBtn">🔥 Place Fire Trap (Damage)</button>
+            <button class="start-btn" id="startBtn">🎮 Start Game</button>
+        </div>
+
+        <div class="game-over" id="gameOver">
+            <h2 id="gameOverTitle">Game Over!</h2>
+            <p id="gameOverMessage">Your tribe has been defeated!</p>
+            <p>Final Score: <strong id="finalScore">0</strong> dinosaur kills</p>
+            <button class="start-btn" onclick="location.reload()">Play Again</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
