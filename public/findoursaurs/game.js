@@ -1,15 +1,15 @@
 // Find Oursaurs - Memory Matching Game
 
-// All 5 available PNGs as card pairs
+// 8 unique images — one per pair, no repeats even on hard (8 pairs)
 const dinoEmojis = [
     '/dino.png',
     '/dino2.png',
     '/dino3.png',
+    '/dino4.png',
+    '/dino5.png',
     '/caveman.png',
-    '/spear.png',
-    '/dino.png',
-    '/dino2.png',
-    '/dino3.png'
+    '/caveman2.png',
+    '/spear.png'
 ];
 
 let gameState = {
@@ -96,7 +96,11 @@ function cardContent(src) {
     const img = document.createElement('img');
     img.src = src;
     img.alt = 'dino';
-    img.style.cssText = 'width:60%;height:60%;object-fit:contain;pointer-events:none;';
+    // some images are naturally smaller — give them extra scale
+    const small = ['/caveman2.png', '/dino3.png', '/dino4.png', '/dino5.png'];
+    const size = small.includes(src) ? '95%' : '80%';
+    img.style.cssText = `width:${size};height:${size};object-fit:contain;pointer-events:none;`;
+    if (src === '/caveman2.png') img.style.transform = 'scale(2)';
     return img;
 }
 

@@ -25,12 +25,25 @@
       position: absolute;
       bottom: 20px;
       right: 100px;
-      width: 280px;
-      max-width: 45vw;
+      width: 400px;
+      max-width: 40vw;
       pointer-events: none;
       opacity: 0.92;
       transform: translateZ(0);
     }
+
+    .bg-dino {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.75;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
+    }
+    #bg-d2  { width: 320px; top: 60px;   left: 40px;  transform: scaleX(-1) rotate(-8deg); }
+    #bg-d4  { width: 280px; top: 80px;   right: 30px; transform: rotate(6deg); }
+    #bg-d5  { width: 340px; bottom: 80px; left: 60px; transform: rotate(-5deg); }
+    #bg-cv2 { width: 420px; top: 200px;  left: 20px;  transform: rotate(10deg); }
+    #bg-sp  { width: 200px; bottom: 160px; right: 60px; transform: rotate(-20deg); }
+    #bg-d1  { width: 300px; top: 50%; right: 0; transform: translateY(-50%) rotate(-3deg); }
 
     header {
       display: flex;
@@ -212,7 +225,13 @@
     </a>
 
   </div>
-  <img id="ptero" src="/dino3.png" alt="Pterodactyl" />
+  <img id="bg-d1"  class="bg-dino" src="/dino.png"     alt="" />
+  <img id="ptero"  src="/dino3.png"    alt="" />
+  <img id="bg-d2"  class="bg-dino" src="/dino2.png"    alt="" />
+  <img id="bg-d4"  class="bg-dino" src="/dino4.png"    alt="" />
+  <img id="bg-d5"  class="bg-dino" src="/dino5.png"    alt="" />
+  <img id="bg-cv2" class="bg-dino" src="/caveman2.png" alt="" />
+  <img id="bg-sp"  class="bg-dino" src="/spear.png"    alt="" />
 </body>
 
 </html>
